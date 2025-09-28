@@ -82,7 +82,7 @@ all_regions_int <- bind_rows(
 # 확인
 head(all_regions_int)
 
-save(all_regions_int, file = "./r_data/all_regions_int.rdata")
+#save(all_regions_int, file = "./r_data/all_regions_int.rdata")
 #───────────────────────────────────────────────────────────────────────────────
 
 
