@@ -47,61 +47,38 @@ write.csv(final_clustered, "final_clustered.csv",
           fileEncoding = "CP949")
 
 
-#______________________
+#───────────────────────────────────────────────────────────────────────────────
+#[ㅇㅅ부탁 군집분석]
 getwd()
 
-cluster_data <- read.csv("./통합 문서3.csv", fileEncoding = "UTF-8")
-
+cluster_data <- read.csv("./은성님 요청 데이터.csv", fileEncoding = "CP949")
 head(cluster_data)
 
-
-
-
-cluster_data <- na.omit(cluster_data)
-cluster_data <- cluster_data %>%
-  rename(면적 = 면적...)
-
-head(cluster_data)
-
-
-
-# 1.
-# 면적을 숫자로 변환 후 10배
-cluster_data$면적 <- as.numeric(cluster_data$면적) * 10
-
-
-#write.csv(cluster_data, "은성님 요청 데이터.csv",
-          row.names = FALSE,
-          fileEncoding = "CP949")
-
-
-str(cluster_data)
-cluster_data <- na.omit(cluster_data)
-head(cluster_data)
-cluster_data <- cluster_data %>%
+# NA 제거 및 시군구명 제거
+cluster_data <- na.omit(cluster_data) %>%
   select(-시군구명)
 
-# 3. 표준화 (스케일링)
+# 표준화
 cluster_scaled <- scale(cluster_data)
 
-# 4. 최적 군집 수 탐색 : 엘보우(Elbow) 방법
+# 엘보우 방법
 fviz_nbclust(cluster_scaled, kmeans, method = "wss") +
   labs(title = "엘보우 방법으로 본 최적 군집 수")
 
-# 5. K-means 수행 (예: k = 4)
+# K-means (k = 4 예시)
 set.seed(123)
 km_res <- kmeans(cluster_scaled, centers = 4, nstart = 25)
 
-# 6. 각 시군구의 군집 번호 확인
-km_res$cluster
-
-# 7. 원본 데이터에 군집 번호 붙이기
-final_clustered <- new_cluster %>%
+# 원본 데이터에 군집 번호 추가
+final_clustered <- cluster_data %>%
   mutate(cluster = km_res$cluster)
 
-head(final_clustered)
+# 군집별 평균값 요약
+cluster_summary <- final_clustered %>%
+  group_by(cluster) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE))
 
-# 8. 시각화 : PCA 차원축소 후 군집 표시
+# PCA 차원축소 시각화
 fviz_cluster(km_res,
              data = cluster_scaled,
              geom = "point",
@@ -110,10 +87,4 @@ fviz_cluster(km_res,
   theme_minimal() +
   labs(title = "K-means 군집 결과 (PCA 차원 축소)")
 
-# 9. 군집별 평균값 요약
-cluster_summary <- final_clustered %>%
-  group_by(cluster) %>%
-  summarise(across(-시군구명, mean, na.rm = TRUE))
-
 cluster_summary
-
