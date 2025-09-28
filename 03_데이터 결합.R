@@ -25,7 +25,8 @@ final_data <- all_regions_int %>%
 # 3) 확인
 head(final_data)
 
-save(final_data, file = "./r_data/final_data.rdata")
+#save(final_data, file = "./r_data/final_data.rdata")
+
 #───────────────────────────────────────────────────────────────────────────────
 #[csv 파일로 저장]
 write.csv(final_data, "final_data_cp949.csv",
