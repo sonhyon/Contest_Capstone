@@ -61,6 +61,6 @@ all_regions_visitor <- bind_rows(
 # -------------------------------
 head(all_regions_visitor)
 
-save(all_regions_visitor, file = "./r_data/all_regions_visitor.rdata")
-load("./r_data/all_regions_visitor.rdata")
+#save(all_regions_visitor, file = "./r_data/all_regions_visitor.rdata")
+#load("./r_data/all_regions_visitor.rdata")
 
